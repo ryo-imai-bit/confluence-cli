@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/ryo-imai-bit/confluence-cli/cmd/label"
 	"github.com/ryo-imai-bit/confluence-cli/cmd/page"
 )
 
@@ -25,6 +26,8 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(page.PageCmd)
+	rootCmd.AddCommand(label.LabelCmd)
+	rootCmd.AddCommand(searchCmd)
 	rootCmd.AddCommand(configCmd)
 }
 

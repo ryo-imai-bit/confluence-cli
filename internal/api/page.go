@@ -252,6 +252,42 @@ func (s *PageService) DeletePage(pageID string) error {
 	return nil
 }
 
+// SearchPages searches for pages by title
+func (s *PageService) SearchPages(title string, spaceID string, limit int) (*PageList, error) {
+	params := url.Values{}
+	if title != "" {
+		params.Set("title", title)
+	}
+	if spaceID != "" {
+		params.Set("space-id", spaceID)
+	}
+	if limit > 0 {
+		params.Set("limit", strconv.Itoa(limit))
+	}
+
+	path := "/api/v2/pages"
+	if len(params) > 0 {
+		path += "?" + params.Encode()
+	}
+
+	resp, err := s.client.Get(path)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if err := checkResponse(resp); err != nil {
+		return nil, err
+	}
+
+	var pageList PageList
+	if err := json.NewDecoder(resp.Body).Decode(&pageList); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return &pageList, nil
+}
+
 // checkResponse checks the HTTP response for errors
 func checkResponse(resp *http.Response) error {
 	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
