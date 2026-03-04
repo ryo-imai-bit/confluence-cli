@@ -18,31 +18,17 @@ Download the latest binary from [GitHub Releases](https://github.com/ryo-imai-bi
 
 ```bash
 # macOS (Apple Silicon)
-curl -L https://github.com/ryo-imai-bit/confluence-cli/releases/latest/download/confluence-darwin-arm64 -o /tmp/confluence
-sudo mv /tmp/confluence /usr/local/bin/confluence && sudo chmod +x /usr/local/bin/confluence
+sudo curl -L https://github.com/ryo-imai-bit/confluence-cli/releases/latest/download/confluence-darwin-arm64 -o /usr/local/bin/confluence
+sudo chmod +x /usr/local/bin/confluence
 
 # macOS (Intel)
-curl -L https://github.com/ryo-imai-bit/confluence-cli/releases/latest/download/confluence-darwin-amd64 -o /tmp/confluence
-sudo mv /tmp/confluence /usr/local/bin/confluence && sudo chmod +x /usr/local/bin/confluence
+sudo curl -L https://github.com/ryo-imai-bit/confluence-cli/releases/latest/download/confluence-darwin-amd64 -o /usr/local/bin/confluence
+sudo chmod +x /usr/local/bin/confluence
 
 # Linux
-curl -L https://github.com/ryo-imai-bit/confluence-cli/releases/latest/download/confluence-linux-amd64 -o /tmp/confluence
-sudo mv /tmp/confluence /usr/local/bin/confluence && sudo chmod +x /usr/local/bin/confluence
+sudo curl -L https://github.com/ryo-imai-bit/confluence-cli/releases/latest/download/confluence-linux-amd64 -o /usr/local/bin/confluence
+sudo chmod +x /usr/local/bin/confluence
 ```
-
-<details>
-<summary>Alternative: Install to home directory (no sudo required)</summary>
-
-```bash
-mkdir -p ~/bin
-curl -L https://github.com/ryo-imai-bit/confluence-cli/releases/latest/download/confluence-darwin-arm64 -o ~/bin/confluence
-chmod +x ~/bin/confluence
-
-# Add to your shell profile (~/.zshrc or ~/.bashrc)
-export PATH="$HOME/bin:$PATH"
-```
-
-</details>
 
 ### Build from source
 
