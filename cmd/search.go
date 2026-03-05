@@ -18,6 +18,7 @@ var (
 	searchFormat    string
 	searchCQL       string
 	searchTitleOnly bool
+	searchHelpCQL   bool
 )
 
 var searchCmd = &cobra.Command{
@@ -43,9 +44,16 @@ func init() {
 	searchCmd.Flags().StringVar(&searchFormat, "format", "table", "Output format (table, json)")
 	searchCmd.Flags().StringVar(&searchCQL, "cql", "", "Search using CQL (Confluence Query Language)")
 	searchCmd.Flags().BoolVar(&searchTitleOnly, "title", false, "Search titles only (faster)")
+	searchCmd.Flags().BoolVar(&searchHelpCQL, "help-cql", false, "Show CQL syntax help and examples")
 }
 
 func runSearch(cmd *cobra.Command, args []string) error {
+	// Show CQL help
+	if searchHelpCQL {
+		printCQLHelp()
+		return nil
+	}
+
 	// CQL mode
 	if searchCQL != "" {
 		return runCQLSearch(searchCQL)
@@ -166,4 +174,77 @@ func cleanExcerpt(excerpt string, maxLen int) string {
 		excerpt = excerpt[:maxLen] + "..."
 	}
 	return excerpt
+}
+
+func printCQLHelp() {
+	help := `
+CQL (Confluence Query Language) Help
+=====================================
+
+SYNTAX
+  field operator value [AND|OR field operator value]
+
+FIELDS
+  text          Body text search
+  title         Title search
+  space         Space key (e.g., DEV, MARKETING)
+  type          Content type (page, blogpost, comment, attachment)
+  label         Label name
+  creator       Creator's account ID
+  created       Creation date
+  lastmodified  Last modified date
+
+OPERATORS
+  =             Exact match
+  ~             Contains (text search)
+  !=            Not equal
+  >  <          Greater/less than (for dates)
+  >=  <=        Greater/less than or equal (for dates)
+
+EXAMPLES
+
+  # Search pages containing "API" in body
+  confluence search --cql "text ~ 'API'"
+
+  # Search pages with "design" in title
+  confluence search --cql "title ~ 'design'"
+
+  # Search within a specific space
+  confluence search --cql "space = DEV AND text ~ 'error'"
+
+  # Search pages with a label
+  confluence search --cql "label = 'important'"
+
+  # Search pages with multiple labels
+  confluence search --cql "label = 'api' AND label = 'v2'"
+
+  # Recently updated pages (last 7 days)
+  confluence search --cql "lastmodified >= now('-7d')"
+
+  # Pages created in the last 30 days
+  confluence search --cql "created >= now('-30d') AND type = page"
+
+  # Pages only (exclude blog posts)
+  confluence search --cql "type = page AND text ~ 'manual'"
+
+  # Complex query
+  confluence search --cql "space = DEV AND type = page AND label = 'release' AND text ~ '2024'"
+
+DATE FUNCTIONS
+  now()         Current time
+  now('-1d')    1 day ago
+  now('-7d')    7 days ago
+  now('-30d')   30 days ago
+  now('-1w')    1 week ago
+  now('-1M')    1 month ago
+  now('-1y')    1 year ago
+
+NOTES
+  - Wrap values containing spaces in single quotes
+  - AND/OR must be uppercase
+  - Use parentheses () for grouping
+
+More info: https://developer.atlassian.com/cloud/confluence/advanced-searching-using-cql/
+`
+	fmt.Print(help)
 }
