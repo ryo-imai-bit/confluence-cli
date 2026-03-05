@@ -98,8 +98,10 @@ confluence page create --space-id <id> --title <title> [--body <content>] [--par
 confluence page update <page-id> --title <title> [--body <content>]
 confluence page delete <page-id>
 
-# Search
-confluence search <query> [--space-id <id>] [--limit <n>] [--format table|json]
+# Search (full-text search using CQL)
+confluence search <query> [--space-key <key>] [--limit <n>]   # Content search
+confluence search <query> --title                              # Title only search
+confluence search --cql "type=page AND text ~ 'keyword'"       # CQL query
 
 # Label commands
 confluence label list [--prefix <prefix>] [--limit <n>] [--format table|json]
@@ -114,5 +116,7 @@ confluence config path         # Show config file paths
 
 ## API Reference
 
-- Uses Confluence REST API v2
-- [API Documentation](https://developer.atlassian.com/cloud/confluence/rest/v2/intro#about)
+- Uses Confluence REST API v2 (pages, labels)
+- Uses Confluence REST API v1 (CQL search)
+- [API v2 Documentation](https://developer.atlassian.com/cloud/confluence/rest/v2/intro#about)
+- [CQL Documentation](https://developer.atlassian.com/cloud/confluence/advanced-searching-using-cql/)
