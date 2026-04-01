@@ -88,6 +88,13 @@ export CONFLUENCE_API_TOKEN="your-api-token"
 
 Generate your API token at: https://id.atlassian.com/manage-profile/security/api-tokens
 
+Both classic API tokens and scoped API tokens are supported.
+Simply set `base_url` to `https://your-domain.atlassian.net/wiki` and either token type will work.
+
+When using scoped API tokens, the following scopes are required:
+- `read:page:confluence`
+- `search:confluence`
+
 ## Usage
 
 ```bash
