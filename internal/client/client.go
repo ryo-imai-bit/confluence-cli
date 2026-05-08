@@ -27,18 +27,28 @@ type Client struct {
 	config     Config
 }
 
-// NewClient creates a new Confluence API client
+// NewClient creates a new Confluence API client.
+// If the base URL is a *.atlassian.net URL, it automatically resolves the Cloud ID
+// and rewrites the URL to the api.atlassian.com gateway for scoped API token support.
 func NewClient() (*Client, error) {
 	config, err := LoadConfig()
 	if err != nil {
 		return nil, err
 	}
 
+	httpClient := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+
+	resolvedURL, err := ResolveBaseURL(httpClient, config.BaseURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve Confluence API URL: %w", err)
+	}
+	config.BaseURL = resolvedURL
+
 	return &Client{
-		httpClient: &http.Client{
-			Timeout: 30 * time.Second,
-		},
-		config: config,
+		httpClient: httpClient,
+		config:     config,
 	}, nil
 }
 
